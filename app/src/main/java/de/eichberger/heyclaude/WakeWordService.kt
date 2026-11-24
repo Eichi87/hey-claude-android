@@ -34,7 +34,7 @@ import kotlin.math.max
  *
  * Ablauf bei Erkennung:
  *  1. Mikrofon sofort freigeben (AudioRecord stoppen und freigeben).
- *  2. Kurz vibrieren und den Sprachassistenten starten.
+ *  2. Kurz vibrieren und die Claude-App öffnen (möglichst im Sprachmodus, siehe ClaudeLauncher).
  *  3. Erst wieder lauschen, wenn mindestens 5 s vergangen sind UND keine andere App mehr
  *     das Mikrofon nutzt (AudioManager.registerAudioRecordingCallback).
  */
@@ -239,10 +239,14 @@ class WakeWordService : Service() {
 
         vibrate()
         detectedAt = SystemClock.elapsedRealtime()
-        val launched = AssistantLauncher.launch(this)
+        val launched = ClaudeLauncher.launch(this)
         ServiceStatus.set(
             State.WAITING,
-            if (launched != null) getString(R.string.status_launched, launched) else getString(R.string.status_no_assistant),
+            if (launched != null) {
+                getString(R.string.status_launched, launched.stage)
+            } else {
+                getString(R.string.status_no_claude)
+            },
         )
         updateNotification()
         main.postDelayed(resumeCheck, MIN_PAUSE_MS)

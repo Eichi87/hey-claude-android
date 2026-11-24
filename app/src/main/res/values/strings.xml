@@ -7,9 +7,9 @@
     <string name="status_starting">Startet …</string>
     <string name="status_listening">Hört auf „Hey Claude“</string>
     <string name="status_paused">Pausiert</string>
-    <string name="status_waiting">Assistent aktiv – lauscht danach weiter</string>
-    <string name="status_launched">%1$s gestartet – lauscht wieder, sobald das Mikrofon frei ist</string>
-    <string name="status_no_assistant">Kein Assistent gefunden – Claude-App installiert?</string>
+    <string name="status_waiting">Claude aktiv – lauscht danach weiter</string>
+    <string name="status_launched">Claude geöffnet (Stufe %1$s) – lauscht wieder, sobald das Mikrofon frei ist</string>
+    <string name="status_no_claude">Claude-App nicht gefunden – installiert?</string>
     <string name="status_no_mic_permission">Mikrofon-Berechtigung fehlt</string>
     <string name="status_mic_unavailable">Mikrofon nicht verfügbar</string>
     <string name="status_model_error">Modelle konnten nicht geladen werden: %1$s</string>
@@ -20,7 +20,15 @@
     <string name="threshold_label">Erkennungsschwelle: %1$s</string>
     <string name="threshold_description">Erkennungsschwelle</string>
     <string name="threshold_hint">Niedriger = reagiert leichter, löst aber öfter versehentlich aus. Höher = sicherer, aber du musst deutlicher sprechen.</string>
-    <string name="direct_claude">Claude-App direkt öffnen (falls der Sprachassistent etwas anderes startet)</string>
+    <string name="claude_title">Claude-Start</string>
+    <string name="test_launch">Claude jetzt öffnen (Test)</string>
+    <string name="last_launch">Letzter Start: %1$s</string>
+    <string name="last_launch_none">Letzter Start: noch keiner</string>
+    <string name="shortcuts_found">Shortcuts der Claude-App (%1$d):\n%2$s\n\nSprach-Shortcut: %3$s</string>
+    <string name="shortcuts_none">Keine statischen Shortcuts in der Claude-App gefunden – Start über Stufe c (neuer Chat).</string>
+    <string name="shortcuts_not_installed">Claude-App ist nicht installiert.</string>
+    <string name="shortcuts_error">Shortcuts nicht lesbar: %1$s</string>
+    <string name="voice_none">keiner erkannt</string>
 
     <string name="permissions_title">Berechtigungen</string>
     <string name="perm_mic">Mikrofon</string>
@@ -29,13 +37,13 @@
     <string name="perm_battery">Akku-Optimierung ausnehmen</string>
     <string name="perm_missing">%1$s – erlauben</string>
     <string name="perm_granted">%1$s ✓</string>
-    <string name="permissions_hint">„Über anderen Apps einblenden“ ist nötig, damit der Assistent auch bei gesperrtem Bildschirm oder aus dem Hintergrund starten darf. Ohne Ausnahme von der Akku-Optimierung beendet Android den Dienst oft nach einiger Zeit.</string>
+    <string name="permissions_hint">„Über anderen Apps einblenden“ ist nötig, damit Claude auch bei gesperrtem Bildschirm oder aus dem Hintergrund starten darf. Ohne Ausnahme von der Akku-Optimierung beendet Android den Dienst oft nach einiger Zeit.</string>
 
     <string name="channel_service">Lauschen</string>
     <string name="channel_hints">Hinweise</string>
     <string name="notif_listening">Hört auf „Hey Claude“</string>
     <string name="notif_paused">Pausiert</string>
-    <string name="notif_waiting">Assistent aktiv</string>
+    <string name="notif_waiting">Claude aktiv</string>
     <string name="notif_starting">Startet …</string>
     <string name="notif_error">Fehler</string>
     <string name="action_pause">Pausieren</string>

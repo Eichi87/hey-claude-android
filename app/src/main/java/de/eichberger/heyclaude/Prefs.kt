@@ -8,7 +8,7 @@ object Prefs {
     private const val FILE = "hey_claude"
     const val KEY_THRESHOLD = "threshold"
     const val KEY_ENABLED = "enabled"
-    const val KEY_OPEN_CLAUDE_DIRECTLY = "open_claude_directly"
+    const val KEY_LAST_LAUNCH = "last_launch"
 
     const val DEFAULT_THRESHOLD = 0.5f
 
@@ -26,9 +26,9 @@ object Prefs {
     fun setEnabled(context: Context, value: Boolean) =
         get(context).edit().putBoolean(KEY_ENABLED, value).apply()
 
-    fun openClaudeDirectly(context: Context): Boolean =
-        get(context).getBoolean(KEY_OPEN_CLAUDE_DIRECTLY, false)
+    /** Welche Stufe der Start-Kaskade zuletzt gegriffen hat (zur Kontrolle im Hauptbildschirm). */
+    fun lastLaunch(context: Context): String? = get(context).getString(KEY_LAST_LAUNCH, null)
 
-    fun setOpenClaudeDirectly(context: Context, value: Boolean) =
-        get(context).edit().putBoolean(KEY_OPEN_CLAUDE_DIRECTLY, value).apply()
+    fun setLastLaunch(context: Context, value: String) =
+        get(context).edit().putString(KEY_LAST_LAUNCH, value).apply()
 }

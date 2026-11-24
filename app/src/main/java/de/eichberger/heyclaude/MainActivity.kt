@@ -12,7 +12,6 @@ import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +30,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scoreText: TextView
     private lateinit var thresholdLabel: TextView
     private lateinit var thresholdSlider: Slider
-    private lateinit var directCheck: CheckBox
+    private lateinit var testButton: Button
+    private lateinit var lastLaunchText: TextView
+    private lateinit var shortcutsText: TextView
     private lateinit var micButton: Button
     private lateinit var notifButton: Button
     private lateinit var overlayButton: Button
@@ -75,7 +76,9 @@ class MainActivity : AppCompatActivity() {
         scoreText = findViewById(R.id.score_text)
         thresholdLabel = findViewById(R.id.threshold_label)
         thresholdSlider = findViewById(R.id.threshold_slider)
-        directCheck = findViewById(R.id.direct_check)
+        testButton = findViewById(R.id.test_button)
+        lastLaunchText = findViewById(R.id.last_launch_text)
+        shortcutsText = findViewById(R.id.shortcuts_text)
         micButton = findViewById(R.id.mic_button)
         notifButton = findViewById(R.id.notif_button)
         overlayButton = findViewById(R.id.overlay_button)
@@ -97,8 +100,10 @@ class MainActivity : AppCompatActivity() {
             if (fromUser) Prefs.setThreshold(this, t)
         }
 
-        directCheck.isChecked = Prefs.openClaudeDirectly(this)
-        directCheck.setOnCheckedChangeListener { _, checked -> Prefs.setOpenClaudeDirectly(this, checked) }
+        testButton.setOnClickListener {
+            ClaudeLauncher.launch(this)
+            showLastLaunch()
+        }
 
         micButton.setOnClickListener { micPermission.launch(Manifest.permission.RECORD_AUDIO) }
         notifButton.setOnClickListener { requestNotifications() }
@@ -124,6 +129,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshPermissions()
+        showLastLaunch()
+        showShortcuts()
     }
 
     override fun onStop() {
@@ -171,6 +178,34 @@ class MainActivity : AppCompatActivity() {
             State.PAUSED -> getString(R.string.status_paused)
             State.WAITING -> message ?: getString(R.string.status_waiting)
             State.ERROR -> message ?: getString(R.string.notif_error)
+        }
+    }
+
+    private fun showLastLaunch() {
+        lastLaunchText.text = Prefs.lastLaunch(this)?.let { getString(R.string.last_launch, it) }
+            ?: getString(R.string.last_launch_none)
+    }
+
+    /** Zeigt die aus der Claude-App gelesenen Shortcuts, damit man die IDs prüfen kann. */
+    private fun showShortcuts() {
+        shortcutsText.text = when {
+            !ClaudeLauncher.isInstalled(this) -> getString(R.string.shortcuts_not_installed)
+            else -> try {
+                val list = ClaudeLauncher.readStaticShortcuts(this)
+                if (list.isEmpty()) {
+                    getString(R.string.shortcuts_none)
+                } else {
+                    val voice = list.firstOrNull { it.enabled && it.looksLikeVoice }
+                    getString(
+                        R.string.shortcuts_found,
+                        list.size,
+                        list.joinToString("\n") { "• " + it.describe() },
+                        voice?.id ?: getString(R.string.voice_none),
+                    )
+                }
+            } catch (e: Exception) {
+                getString(R.string.shortcuts_error, e.message ?: e.javaClass.simpleName)
+            }
         }
     }
 

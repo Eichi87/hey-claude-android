@@ -1,6 +1,6 @@
 # Hey Claude für Android
 
-Kleine Android-App, die im Hintergrund **offline** auf das Weckwort „Hey Claude“ hört und dann den Standard-Sprachassistenten des Handys startet (bei dir: Claude). Kein Button, kein Umweg über Google. Die Erkennung läuft komplett auf dem Handy mit [openWakeWord](https://github.com/dscripka/openWakeWord)-Modellen über ONNX Runtime.
+Kleine Android-App, die im Hintergrund **offline** auf das Weckwort „Hey Claude“ hört und dann direkt die Claude-App öffnet, möglichst im Sprachmodus. Der Standardassistent des Handys (z. B. Gemini mit „Hey Google“) bleibt davon unberührt; die App registriert sich nicht als Assistent. Die Erkennung läuft komplett auf dem Handy mit [openWakeWord](https://github.com/dscripka/openWakeWord)-Modellen über ONNX Runtime.
 
 ## Installation
 
@@ -11,7 +11,7 @@ Kleine Android-App, die im Hintergrund **offline** auf das Weckwort „Hey Claud
 3. **App öffnen und Berechtigungen setzen:** Unter „Berechtigungen“ alle vier Knöpfe antippen:
    - **Mikrofon** – zum Lauschen
    - **Benachrichtigungen** – für die dauerhafte Anzeige „Hört auf Hey Claude“
-   - **Über anderen Apps einblenden** – nötig, damit der Assistent aus dem Hintergrund starten darf
+   - **Über anderen Apps einblenden** – nötig, damit Claude aus dem Hintergrund geöffnet werden darf
    - **Akku-Optimierung ausnehmen** – sonst beendet Android den Dienst nach einiger Zeit
 4. **Akku-Optimierung abschalten:** Falls der Knopf nicht direkt hilft: *Einstellungen → Apps → Hey Claude → Akku → „Nicht eingeschränkt“*. Bei Samsung zusätzlich unter *Akku → Hintergrundnutzungslimits* sicherstellen, dass Hey Claude nicht in „Apps im Standby“ steht.
 5. Schalter **„Auf ‚Hey Claude‘ hören“** einschalten.
@@ -23,7 +23,8 @@ Updates: Neue APK genauso herunterladen und installieren. Sie wird über die alt
 - **Erkennungsschwelle** (Standard 0,50): niedriger = reagiert leichter, löst aber öfter versehentlich aus. Der angezeigte „aktuelle Erkennungswert“ hilft beim Einstellen.
 - **Pausieren/Fortsetzen** direkt in der Benachrichtigung.
 - Nach einer Erkennung gibt die App das Mikrofon sofort frei und lauscht erst wieder, wenn keine andere App mehr aufnimmt (mindestens 5 Sekunden Pause).
-- Startet statt Claude ein anderer Assistent, die Option „Claude-App direkt öffnen“ einschalten.
+- **Claude-Start als Kaskade:** (a) Sprach-Shortcut der Claude-App, ausgelesen aus der installierten App; (b) Sprachmodus-Deep-Link, nur falls der Shortcut einen mitbringt (offiziell ist keiner dokumentiert); (c) `claude://claude.ai/new`, dann `https://claude.ai/new`, dann normaler App-Start.
+- Unter „Claude-Start“ zeigt die App die gefundenen Shortcuts der Claude-App, welche Stufe zuletzt gegriffen hat, und hat einen Test-Knopf.
 - **Nach einem Neustart:** Bis Android 13 startet die App von selbst. Ab Android 14 erlaubt Android das für Mikrofon-Dienste nicht mehr; dann erscheint die Benachrichtigung „Tippen zum Aktivieren“.
 
 ## Technik

@@ -61,12 +61,34 @@
             android:text="@string/threshold_hint"
             android:textAppearance="?attr/textAppearanceBodySmall" />
 
-        <CheckBox
-            android:id="@+id/direct_check"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/direct_claude" />
+            android:layout_marginTop="24dp"
+            android:text="@string/claude_title"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <Button
+            android:id="@+id/test_button"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/test_launch" />
+
+        <TextView
+            android:id="@+id/last_launch_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodySmall" />
+
+        <TextView
+            android:id="@+id/shortcuts_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textIsSelectable="true" />
 
         <TextView
             android:layout_width="match_parent"

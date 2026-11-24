@@ -11,15 +11,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Paketsichtbarkeit (Android 11+): nötig, um Assistent und Claude-App zu finden. -->
+    <!-- Paketsichtbarkeit (Android 11+): nötig, um die Claude-App und ihre Shortcuts zu finden.
+         Die App meldet sich bewusst nirgends als Sprach-App beim System an; Gemini bleibt unberührt. -->
     <queries>
         <package android:name="com.anthropic.claude" />
-        <intent>
-            <action android:name="android.intent.action.VOICE_COMMAND" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.ASSIST" />
-        </intent>
     </queries>
 
     <application
