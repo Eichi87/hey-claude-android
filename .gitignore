@@ -27,6 +27,8 @@ render.experimental.xml
 # Keystore files
 *.jks
 *.keystore
+# Fester Debug-Schlüssel gehört bewusst ins Repo (Updates über alte Version)
+!debug.keystore
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
