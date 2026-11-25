@@ -15,7 +15,9 @@
     <string name="status_model_error">Modelle konnten nicht geladen werden: %1$s</string>
     <string name="status_not_allowed">Android hat den Start im Hintergrund nicht erlaubt</string>
 
-    <string name="score_value">Aktueller Erkennungswert: %1$s</string>
+    <string name="score_value">Erkennungswert: %1$s (Höchstwert: %2$s)\nMikrofonpegel: %3$s</string>
+    <string name="level_db">%1$d dB</string>
+    <string name="level_silent">kein Signal – Mikrofon stumm geschaltet?</string>
     <string name="score_idle">Aktueller Erkennungswert: –</string>
     <string name="threshold_label">Erkennungsschwelle: %1$s</string>
     <string name="threshold_description">Erkennungsschwelle</string>
@@ -25,7 +27,7 @@
     <string name="last_launch">Letzter Start: %1$s</string>
     <string name="last_launch_none">Letzter Start: noch keiner</string>
     <string name="shortcuts_found">Shortcuts der Claude-App (%1$d):\n%2$s\n\nSprach-Shortcut: %3$s</string>
-    <string name="shortcuts_none">Keine statischen Shortcuts in der Claude-App gefunden – Start über Stufe c (neuer Chat).</string>
+    <string name="shortcuts_none">Keine statischen Shortcuts in der Claude-App gefunden (Stufe a nicht möglich).</string>
     <string name="shortcuts_not_installed">Claude-App ist nicht installiert.</string>
     <string name="shortcuts_error">Shortcuts nicht lesbar: %1$s</string>
     <string name="voice_none">keiner erkannt</string>

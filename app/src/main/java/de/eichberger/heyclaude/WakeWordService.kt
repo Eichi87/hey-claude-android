@@ -191,7 +191,9 @@ class WakeWordService : Service() {
             }
             val buffer = ShortArray(WakeWordDetector.CHUNK_SAMPLES)
             var peak = 0f
+            var peakLevel = -100f
             var peakFrames = 0
+            ServiceStatus.maxScore = 0f
             while (running) {
                 var offset = 0
                 while (offset < buffer.size && running) {
@@ -206,9 +208,13 @@ class WakeWordService : Service() {
 
                 val score = det.process(buffer)
                 peak = max(peak, score)
+                peakLevel = max(peakLevel, levelDb(buffer))
+                ServiceStatus.maxScore = max(ServiceStatus.maxScore, score)
                 if (++peakFrames >= FRAMES_PER_SECOND) {
                     ServiceStatus.recentScore = peak
+                    ServiceStatus.recentLevelDb = peakLevel
                     peak = 0f
+                    peakLevel = -100f
                     peakFrames = 0
                 }
                 if (score >= threshold) {
@@ -230,6 +236,14 @@ class WakeWordService : Service() {
         }
         running = false
         if (detected) main.post { onWakeWord() }
+    }
+
+    /** Effektivwert eines Blocks in dBFS; 0 dB = Vollaussteuerung, -100 = Stille. */
+    private fun levelDb(samples: ShortArray): Float {
+        var sum = 0.0
+        for (s in samples) sum += s.toDouble() * s.toDouble()
+        val rms = kotlin.math.sqrt(sum / samples.size)
+        return if (rms < 1.0) -100f else (20.0 * kotlin.math.log10(rms / 32768.0)).toFloat()
     }
 
     private fun onWakeWord() {

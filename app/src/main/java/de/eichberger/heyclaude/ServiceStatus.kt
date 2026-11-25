@@ -24,6 +24,14 @@ object ServiceStatus {
     @Volatile
     var recentScore: Float = 0f
 
+    /** Höchster Erkennungswert seit Beginn des Lauschens. */
+    @Volatile
+    var maxScore: Float = 0f
+
+    /** Lautester Mikrofonpegel der letzten Sekunde in dBFS (-100 = völlige Stille). */
+    @Volatile
+    var recentLevelDb: Float = -100f
+
     private val main = Handler(Looper.getMainLooper())
     private val listeners = mutableSetOf<Listener>()
 

@@ -23,9 +23,11 @@ import org.xmlpull.v1.XmlPullParser
  *     a1) per LauncherApps.startShortcut (geht nur, wenn diese App Standard-Launcher wäre) oder
  *     a2) per explizitem Intent aus der Shortcut-Definition (geht, wenn die Ziel-Activity exportiert ist).
  *     Dynamische Shortcuts, die die App erst zur Laufzeit anlegt, sind für Fremd-Apps nicht sichtbar.
- *  b) Deep-Link direkt in den Sprachmodus: Ist nicht dokumentiert (Stand 24.11.2026 nennt die
- *     Hilfe nur claude://code-Routen). Deshalb nichts geraten; eine Stufe-b-URL wird nur
- *     benutzt, wenn der gefundene Sprach-Shortcut selbst eine data-URI mitbringt (siehe a2).
+ *  b) Intent direkt in den Sprachmodus. Ein Deep-Link dafür ist nicht dokumentiert (die Hilfe nennt
+ *     nur claude://code-Routen), deshalb wird keiner geraten. Stattdessen werden die Sprach-Intents
+ *     ASSIST und VOICE_COMMAND gezielt an die Claude-App adressiert (setPackage). Das ruft nur dann
+ *     etwas auf, wenn Claude selbst eine passende Activity anbietet, und berührt den Standard-
+ *     assistenten (z. B. Gemini) nicht: Es wird nichts registriert und kein Systemdialog geöffnet.
  *  c) claude://claude.ai/new, dann https://claude.ai/new (App-Link), dann normaler Launch-Intent.
  */
 object ClaudeLauncher {
@@ -105,6 +107,13 @@ object ClaudeLauncher {
             }
         }
 
+        // Stufe b: Sprach-Intents gezielt an die Claude-App.
+        for ((action, label) in VOICE_ACTIONS) {
+            if (tryStart(context, Intent(action).setPackage(CLAUDE_PACKAGE))) {
+                return remember(context, Result("b", label))
+            }
+        }
+
         // Stufe c: neuer Chat, dann normaler Start.
         if (tryStart(context, Intent(Intent.ACTION_VIEW, Uri.parse("claude://claude.ai/new")).setPackage(CLAUDE_PACKAGE))) {
             return remember(context, Result("c", "claude://claude.ai/new"))
@@ -118,6 +127,26 @@ object ClaudeLauncher {
         }
         Prefs.setLastLaunch(context, "keine Stufe hat gegriffen")
         return null
+    }
+
+    /** Sprach-Intents, die gezielt an Claude gehen (Stufe b). */
+    private val VOICE_ACTIONS = listOf(
+        Intent.ACTION_ASSIST to "ASSIST an Claude",
+        Intent.ACTION_VOICE_COMMAND to "VOICE_COMMAND an Claude",
+    )
+
+    /** Diagnose: Welche Einstiege bietet die installierte Claude-App für die Stufen b und c an? */
+    fun describeVoiceEntryPoints(context: Context): String {
+        val pm = context.packageManager
+        val probes = VOICE_ACTIONS.map { (action, label) -> label to Intent(action).setPackage(CLAUDE_PACKAGE) } +
+            listOf(
+                "claude://claude.ai/new" to Intent(Intent.ACTION_VIEW, Uri.parse("claude://claude.ai/new")).setPackage(CLAUDE_PACKAGE),
+                "https://claude.ai/new" to Intent(Intent.ACTION_VIEW, Uri.parse("https://claude.ai/new")).setPackage(CLAUDE_PACKAGE),
+            )
+        return probes.joinToString("\n") { (label, intent) ->
+            val hits = pm.queryIntentActivities(intent, 0).map { it.activityInfo.name.substringAfterLast('.') }
+            "• $label: " + if (hits.isEmpty()) "nicht angeboten" else hits.joinToString()
+        }
     }
 
     /** Liest die statischen Shortcuts aller Launcher-Activities der Claude-App. */

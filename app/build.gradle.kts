@@ -15,7 +15,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = buildNumber
-        versionName = "1.1.$buildNumber"
+        versionName = "1.2.$buildNumber"
 
         // Nur echte Handy-Architekturen, hält die APK klein.
         ndk {

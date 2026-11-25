@@ -59,7 +59,13 @@ class MainActivity : AppCompatActivity() {
         override fun run() {
             val listening = ServiceStatus.state == State.LISTENING
             scoreText.text = if (listening) {
-                getString(R.string.score_value, format(ServiceStatus.recentScore))
+                val db = ServiceStatus.recentLevelDb
+                getString(
+                    R.string.score_value,
+                    format3(ServiceStatus.recentScore),
+                    format3(ServiceStatus.maxScore),
+                    if (db <= -99f) getString(R.string.level_silent) else getString(R.string.level_db, db.roundToInt()),
+                )
             } else {
                 getString(R.string.score_idle)
             }
@@ -192,8 +198,9 @@ class MainActivity : AppCompatActivity() {
             !ClaudeLauncher.isInstalled(this) -> getString(R.string.shortcuts_not_installed)
             else -> try {
                 val list = ClaudeLauncher.readStaticShortcuts(this)
+                val entries = ClaudeLauncher.describeVoiceEntryPoints(this)
                 if (list.isEmpty()) {
-                    getString(R.string.shortcuts_none)
+                    getString(R.string.shortcuts_none) + "\n\n" + entries
                 } else {
                     val voice = list.firstOrNull { it.enabled && it.looksLikeVoice }
                     getString(
@@ -201,7 +208,7 @@ class MainActivity : AppCompatActivity() {
                         list.size,
                         list.joinToString("\n") { "• " + it.describe() },
                         voice?.id ?: getString(R.string.voice_none),
-                    )
+                    ) + "\n\n" + entries
                 }
             } catch (e: Exception) {
                 getString(R.string.shortcuts_error, e.message ?: e.javaClass.simpleName)
@@ -260,6 +267,8 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
     private fun format(v: Float) = String.format(Locale.GERMANY, "%.2f", v)
+
+    private fun format3(v: Float) = String.format(Locale.GERMANY, "%.3f", v)
 
     companion object {
         const val EXTRA_AUTOSTART = "de.eichberger.heyclaude.AUTOSTART"
