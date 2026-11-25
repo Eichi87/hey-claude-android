@@ -15,7 +15,14 @@
     <string name="status_model_error">Modelle konnten nicht geladen werden: %1$s</string>
     <string name="status_not_allowed">Android hat den Start im Hintergrund nicht erlaubt</string>
 
-    <string name="score_value">Erkennungswert: %1$s (Höchstwert: %2$s)\nMikrofonpegel: %3$s</string>
+    <string name="score_value">Erkennungswert: %1$s (Höchstwert seit Einschalten: %2$s)\nMikrofonpegel: %3$s</string>
+    <string name="last_detection">Letzte Erkennung: %1$s</string>
+    <string name="last_tap">Sprachmodus: %1$s</string>
+    <string name="tap_done">angetippt („%1$s“)</string>
+    <string name="tap_not_found">Symbol nicht gefunden. Sichtbare Knöpfe: %1$s</string>
+    <string name="perm_a11y">Bedienungshilfe: Sprachmodus antippen</string>
+    <string name="a11y_label">Hey Claude – Sprachmodus</string>
+    <string name="a11y_description">Tippt nach „Hey Claude“ in der Claude-App einmal auf das Sprachmodus-Symbol. Arbeitet nur in der Claude-App und nur bis zu 10 Sekunden nach einem Start durch Hey Claude; sonst liest und tut sie nichts.</string>
     <string name="level_db">%1$d dB</string>
     <string name="level_silent">kein Signal – Mikrofon stumm geschaltet?</string>
     <string name="score_idle">Aktueller Erkennungswert: –</string>
@@ -39,7 +46,7 @@
     <string name="perm_battery">Akku-Optimierung ausnehmen</string>
     <string name="perm_missing">%1$s – erlauben</string>
     <string name="perm_granted">%1$s ✓</string>
-    <string name="permissions_hint">„Über anderen Apps einblenden“ ist nötig, damit Claude auch bei gesperrtem Bildschirm oder aus dem Hintergrund starten darf. Ohne Ausnahme von der Akku-Optimierung beendet Android den Dienst oft nach einiger Zeit.</string>
+    <string name="permissions_hint">„Über anderen Apps einblenden“ ist nötig, damit Claude auch bei gesperrtem Bildschirm oder aus dem Hintergrund starten darf. Die Bedienungshilfe startet Claude direkt im Sprachmodus; ist sie aus, öffnet sich nur ein neuer Chat. Ohne Ausnahme von der Akku-Optimierung beendet Android den Dienst oft nach einiger Zeit.</string>
 
     <string name="channel_service">Lauschen</string>
     <string name="channel_hints">Hinweise</string>

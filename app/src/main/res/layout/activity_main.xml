@@ -39,6 +39,12 @@
             android:textAppearance="?attr/textAppearanceBodySmall" />
 
         <TextView
+            android:id="@+id/last_detection_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodySmall" />
+
+        <TextView
             android:id="@+id/threshold_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,6 +89,13 @@
             android:textAppearance="?attr/textAppearanceBodySmall" />
 
         <TextView
+            android:id="@+id/last_tap_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textIsSelectable="true" />
+
+        <TextView
             android:id="@+id/shortcuts_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -118,6 +131,12 @@
 
         <Button
             android:id="@+id/battery_button"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/a11y_button"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

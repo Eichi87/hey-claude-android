@@ -193,7 +193,6 @@ class WakeWordService : Service() {
             var peak = 0f
             var peakLevel = -100f
             var peakFrames = 0
-            ServiceStatus.maxScore = 0f
             while (running) {
                 var offset = 0
                 while (offset < buffer.size && running) {
@@ -219,6 +218,15 @@ class WakeWordService : Service() {
                 }
                 if (score >= threshold) {
                     ServiceStatus.recentScore = score
+                    Prefs.setLastDetection(
+                        this,
+                        String.format(
+                            java.util.Locale.GERMANY,
+                            "%.2f um %tR",
+                            score,
+                            java.util.Date(),
+                        ),
+                    )
                     detected = true
                     break
                 }
@@ -296,6 +304,7 @@ class WakeWordService : Service() {
     }
 
     private fun shutdown() {
+        ServiceStatus.maxScore = 0f
         main.removeCallbacks(resumeCheck)
         stopListening()
         ServiceStatus.set(State.STOPPED)

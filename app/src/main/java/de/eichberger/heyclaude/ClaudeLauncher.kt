@@ -75,6 +75,10 @@ object ClaudeLauncher {
 
     /** Startet Claude über die Kaskade a → b → c. Liefert die Stufe, die gegriffen hat, oder null. */
     fun launch(context: Context): Result? {
+        // Bedienungshilfe scharf schalten, bevor Claude aufgeht (tippt dann auf das Sprachmodus-Symbol).
+        val autoTap = ClaudeVoiceTapService.armIfRunning()
+        Prefs.setLastTap(context, if (autoTap) "läuft …" else "Bedienungshilfe aus")
+
         val voice = try {
             readStaticShortcuts(context).firstOrNull { it.enabled && it.looksLikeVoice }
         } catch (e: Exception) {
@@ -107,25 +111,40 @@ object ClaudeLauncher {
             }
         }
 
-        // Stufe b: Sprach-Intents gezielt an die Claude-App.
-        for ((action, label) in VOICE_ACTIONS) {
-            if (tryStart(context, Intent(action).setPackage(CLAUDE_PACKAGE))) {
-                return remember(context, Result("b", label))
-            }
-        }
-
-        // Stufe c: neuer Chat, dann normaler Start.
-        if (tryStart(context, Intent(Intent.ACTION_VIEW, Uri.parse("claude://claude.ai/new")).setPackage(CLAUDE_PACKAGE))) {
-            return remember(context, Result("c", "claude://claude.ai/new"))
-        }
-        if (tryStart(context, Intent(Intent.ACTION_VIEW, Uri.parse("https://claude.ai/new")).setPackage(CLAUDE_PACKAGE))) {
-            return remember(context, Result("c", "https://claude.ai/new"))
+        // Mit aktiver Bedienungshilfe zuerst der normale neue Chat (c): Dort sitzt laut Claude-Hilfe
+        // das Sprachmodus-Symbol im Eingabefeld. Ohne Bedienungshilfe zuerst das Assistenten-Fenster (b).
+        if (autoTap) {
+            startNewChat(context)?.let { return it }
+            startVoiceIntents(context)?.let { return it }
+        } else {
+            startVoiceIntents(context)?.let { return it }
+            startNewChat(context)?.let { return it }
         }
         val launch = context.packageManager.getLaunchIntentForPackage(CLAUDE_PACKAGE)
         if (launch != null && tryStart(context, launch)) {
             return remember(context, Result("c", "Launch-Intent"))
         }
         Prefs.setLastLaunch(context, "keine Stufe hat gegriffen")
+        return null
+    }
+
+    /** Stufe b: Sprach-Intents gezielt an die Claude-App. */
+    private fun startVoiceIntents(context: Context): Result? {
+        for ((action, label) in VOICE_ACTIONS) {
+            if (tryStart(context, Intent(action).setPackage(CLAUDE_PACKAGE))) {
+                return remember(context, Result("b", label))
+            }
+        }
+        return null
+    }
+
+    /** Stufe c (ohne letzten Fallback): neuer Chat per Deep-Link bzw. App-Link. */
+    private fun startNewChat(context: Context): Result? {
+        for (url in listOf("claude://claude.ai/new", "https://claude.ai/new")) {
+            if (tryStart(context, Intent(Intent.ACTION_VIEW, Uri.parse(url)).setPackage(CLAUDE_PACKAGE))) {
+                return remember(context, Result("c", url))
+            }
+        }
         return null
     }
 

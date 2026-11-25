@@ -37,6 +37,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notifButton: Button
     private lateinit var overlayButton: Button
     private lateinit var batteryButton: Button
+    private lateinit var a11yButton: Button
+    private lateinit var lastTapText: TextView
+    private lateinit var lastDetectionText: TextView
 
     private val ui = Handler(Looper.getMainLooper())
     private var updatingSwitch = false
@@ -69,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 getString(R.string.score_idle)
             }
+            showLastLaunch()
             ui.postDelayed(this, 250)
         }
     }
@@ -89,6 +93,9 @@ class MainActivity : AppCompatActivity() {
         notifButton = findViewById(R.id.notif_button)
         overlayButton = findViewById(R.id.overlay_button)
         batteryButton = findViewById(R.id.battery_button)
+        a11yButton = findViewById(R.id.a11y_button)
+        lastTapText = findViewById(R.id.last_tap_text)
+        lastDetectionText = findViewById(R.id.last_detection_text)
 
         setSwitch(Prefs.enabled(this))
         listenSwitch.setOnCheckedChangeListener { _, checked ->
@@ -117,6 +124,7 @@ class MainActivity : AppCompatActivity() {
             open(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
         }
         batteryButton.setOnClickListener { requestBatteryExemption() }
+        a11yButton.setOnClickListener { open(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
 
         handleAutostart(intent)
     }
@@ -190,6 +198,8 @@ class MainActivity : AppCompatActivity() {
     private fun showLastLaunch() {
         lastLaunchText.text = Prefs.lastLaunch(this)?.let { getString(R.string.last_launch, it) }
             ?: getString(R.string.last_launch_none)
+        lastTapText.text = getString(R.string.last_tap, Prefs.lastTap(this) ?: "–")
+        lastDetectionText.text = getString(R.string.last_detection, Prefs.lastDetection(this) ?: "noch keine")
     }
 
     /** Zeigt die aus der Claude-App gelesenen Shortcuts, damit man die IDs prüfen kann. */
@@ -226,6 +236,7 @@ class MainActivity : AppCompatActivity() {
         setPermissionButton(overlayButton, Settings.canDrawOverlays(this), R.string.perm_overlay)
         val pm = getSystemService(PowerManager::class.java)
         setPermissionButton(batteryButton, pm.isIgnoringBatteryOptimizations(packageName), R.string.perm_battery)
+        setPermissionButton(a11yButton, ClaudeVoiceTapService.isEnabled(this), R.string.perm_a11y)
     }
 
     private fun setPermissionButton(button: Button, ok: Boolean, label: Int) {

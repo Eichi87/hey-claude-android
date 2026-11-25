@@ -9,6 +9,8 @@ object Prefs {
     const val KEY_THRESHOLD = "threshold"
     const val KEY_ENABLED = "enabled"
     const val KEY_LAST_LAUNCH = "last_launch"
+    const val KEY_LAST_TAP = "last_tap"
+    const val KEY_LAST_DETECTION = "last_detection"
 
     const val DEFAULT_THRESHOLD = 0.5f
 
@@ -31,4 +33,16 @@ object Prefs {
 
     fun setLastLaunch(context: Context, value: String) =
         get(context).edit().putString(KEY_LAST_LAUNCH, value).apply()
+
+    /** Ergebnis der Bedienungshilfe beim letzten Start (Sprachmodus angetippt oder nicht). */
+    fun lastTap(context: Context): String? = get(context).getString(KEY_LAST_TAP, null)
+
+    fun setLastTap(context: Context, value: String) =
+        get(context).edit().putString(KEY_LAST_TAP, value).apply()
+
+    /** Letzte Weckwort-Erkennung, z. B. „0,87 um 12:58“. */
+    fun lastDetection(context: Context): String? = get(context).getString(KEY_LAST_DETECTION, null)
+
+    fun setLastDetection(context: Context, value: String) =
+        get(context).edit().putString(KEY_LAST_DETECTION, value).apply()
 }
